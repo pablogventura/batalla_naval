@@ -12,6 +12,13 @@ SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY", "lz6mdsw7z@h8^@uqni+iz3q^_yp_slweiup71@29_1+v)$)wk5"
 )
 
+ALLOWED_HOSTS = [
+    "localhost",
+    "127.0.0.1",
+    "[::1]",
+    "190.3.63.71",
+]
+
 ADMINS = ()
 MANAGERS = ADMINS
 
