@@ -2,13 +2,23 @@
 
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
+from django.shortcuts import redirect
 from django.urls import path
 
 from bn import views as bn_views
 
 admin.autodiscover()
 
+
+def index(request):
+    """Redirige la raíz a menú (o login si no está autenticado)."""
+    if request.user.is_authenticated:
+        return redirect("menu_principal")
+    return redirect("login")
+
+
 urlpatterns = [
+    path("", index, name="index"),
     path("menu/", bn_views.menu_principal, name="menu_principal"),
     path("registrarse/", bn_views.nuevo_usuario, name="nuevo_usuario"),
     path(
