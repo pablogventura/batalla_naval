@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<META HTTP-EQUIV="REFRESH" CONTENT="5;URL={% url 'esperando_turno' partida.id %}"> 
+{% endblock %}
+
+{% block titulo %}Batalla Naval - Esperando Turno - Partida: {{ partida.nombre }}{% endblock %}
+
+{% block contenido %}
+<h1>Partida: {{partida.nombre}}</h1>
+<p>Numero de ronda: {{partida.numero_ronda_actual}}<br></p>
+<p>Sesión de {{usuario.username}}<br></p>
+<p>Esperando turno</p>
+<p>Actualmente es el turno de {{ partida.jugador_actual.ya_ataco|yesno:"defender,atacar" }} de {{ partida.jugador_actual }}<br></p>
+
+{% include "tablero.html" %}
+{% endblock %}

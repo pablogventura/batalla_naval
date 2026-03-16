@@ -1,0 +1,11 @@
+{% load static %}
+{% for i in imagenes %}
+    {% if forloop.first %}
+        <div style="position:relative"><img src="{% static i %}" width="32" height="32" />
+    {% else %}
+        <div style="position:absolute; top:0; left:0;"><img src="{% static i %}" width="32" height="32" />
+    {% endif %}
+{% endfor %}
+{% for i in imagenes %}
+    </div>
+{% endfor %}

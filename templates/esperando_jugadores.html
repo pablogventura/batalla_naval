@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<META HTTP-EQUIV="REFRESH" CONTENT="5;URL={% url 'esperando_jugadores' partida.id %}"> 
+{% endblock %}
+
+{% block titulo %}Batalla Naval - Esperando Jugadores - Partida: {{ partida.nombre }}{% endblock %}
+
+{% block contenido %}
+<p>Sesión de {{usuario.username}}<br></p>
+<p>Esperando a que se unan todos los jugadores</p>
+<p>Faltan {{ jugadores_faltantes }} de {{ partida.cant_jugadores }} jugadores</p>
+<a href="{% url 'abandonar' partida.id %}">Salir de la partida</a>
+{% endblock %}

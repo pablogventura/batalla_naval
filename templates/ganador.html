@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block titulo %}Batalla Naval - Ganador - Partida: {{ partida.nombre }}{% endblock %}
+
+{% block contenido %}
+<h1> Felicitaciones </h1>
+<p> Ganador: {{ usuario }} </p>
+<p> Partida: {{ partida.nombre }} </p>
+<p> Numero de aciertos: {{ aciertos }} </p>
+<p> Daños recibidos: {{ celdas_tocadas }} </p>
+<a href="{% url 'menu_principal' %}">Ir a menu principal</a>
+{% endblock %}

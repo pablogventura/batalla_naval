@@ -1,0 +1,46 @@
+body
+{
+background-color:#d0efff;
+}
+h1
+{
+color:orange;
+text-align:center;
+}
+p
+{
+font-family:"Times New Roman";
+font-size:20px;
+}
+.tablero
+{
+color:black;
+text-align:center;
+border: 1px solid black;
+border-collapse: collapse;
+}
+.pos_x
+{
+color:black;
+text-align:center;
+border-collapse: collapse;
+background-image: url(/static/images/radar.png); 
+}
+.pos_y
+{
+color:black;
+text-align:center;
+border-collapse: collapse;
+background-image: url(/static/images/radar.png); 
+}
+.celda
+{
+color:black;
+border-collapse: collapse;
+}
+.tr_tablero
+{
+color:black;
+border-collapse: collapse;
+}
+

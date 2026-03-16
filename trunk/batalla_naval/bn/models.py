@@ -5,9 +5,9 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
 
-import fields
-from celda import Celda
-from excepciones import *
+from . import fields
+from .celda import Celda
+from .excepciones import *
 
 CELDAS_SUBMARINO = 3
 CELDAS_PORTAAVIONES = 5
@@ -122,7 +122,7 @@ class Partida(models.Model):
         self.cant_turnos_de_la_ronda += 1
         self.save()
 
-    def __unicode__(self):
+    def __str__(self):
         return self.nombre
 
 
@@ -130,8 +130,8 @@ class Jugador(models.Model):
     """
     Modelo que representa a un jugador, de un usuario, para alguna partida.
     """
-    usuario = models.ForeignKey(User)
-    partida = models.ForeignKey(Partida)
+    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
+    partida = models.ForeignKey(Partida, on_delete=models.CASCADE)
     color = models.PositiveIntegerField(default=0)
     es_su_turno = models.BooleanField(
         default=False)  # preguntar si hay que guardarlo en la base de datos
@@ -140,7 +140,7 @@ class Jugador(models.Model):
     ubicaciones_confirmadas = models.BooleanField(default=False)
     derrotado = models.BooleanField(default=False)
 
-    def __unicode__(self):
+    def __str__(self):
         return self.usuario.username
 
     def puntos(self):
@@ -181,7 +181,7 @@ class Tablero(models.Model):
     # en vez de veces_radar va radar en jugador
     ronda_ultimo_escudo = models.IntegerField(
         default=-4)  # para que pueda al principio
-    jugador = models.OneToOneField(Jugador)
+    jugador = models.OneToOneField(Jugador, on_delete=models.CASCADE)
 
     @property
     def lista_alto(self):
@@ -189,7 +189,7 @@ class Tablero(models.Model):
         Devuelve una lista de numeros correspondiente al alto. Sirve para
         renderizar el tablero.
         """
-        return [" "] + range(1, self.ancho + 1)
+        return [" "] + list(range(1, self.ancho + 1))
 
     @property
     def lista_ancho(self):
@@ -197,7 +197,7 @@ class Tablero(models.Model):
         Devuelve una lista de letras correspondiente al ancho. Sirve para
         renderizar
         """
-        return map(lambda x: chr(64 + x), range(1, self.ancho + 1))
+        return [chr(64 + x) for x in range(1, self.ancho + 1)]
 
     @property
     def celdas(self):
@@ -469,8 +469,8 @@ class Tablero(models.Model):
                 i.esta_sumergido = False
                 i.save()
 
-    def __unicode__(self):
-        return u"Tablero de " + self.jugador.usuario.username
+    def __str__(self):
+        return "Tablero de " + self.jugador.usuario.username
 
     def devolver_barco(self, posicion):
         """
@@ -504,8 +504,8 @@ class Radar(models.Model):
     Modelo que representa el haber hecho un ataque de radar.
     Sirve para llevar la cuenta de los radares y cumplir el maximo de radares.
     """
-    desde = models.ForeignKey('Jugador', related_name='radar')
-    contra = models.ForeignKey('Jugador', related_name='radar_contra_mi')
+    desde = models.ForeignKey('Jugador', related_name='radar', on_delete=models.CASCADE)
+    contra = models.ForeignKey('Jugador', related_name='radar_contra_mi', on_delete=models.CASCADE)
 
 
 class Barco(models.Model):
@@ -519,7 +519,7 @@ class Barco(models.Model):
     horizontal = models.BooleanField(default=True)
     hundido = models.BooleanField(default=False)
     puntos_tocados = fields.ListField(blank=True, null=True)
-    tablero = models.ForeignKey(Tablero)  # tablero al que pertenece
+    tablero = models.ForeignKey(Tablero, on_delete=models.CASCADE)
 
     class Meta:
         abstract = True
@@ -703,7 +703,7 @@ class Acorazado(Barco):
         ronda_actual = self.tablero.jugador.partida.numero_ronda_actual
         return ronda_actual - self.ronda_ultimo_ataque_potente >= 3
 
-    def __unicode__(self):
+    def __str__(self):
         return "Acorazado"
 
 
@@ -715,7 +715,7 @@ class Patrulla(Barco):
         super(Patrulla, self).__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_PATRULLA
 
-    def __unicode__(self):
+    def __str__(self):
         return "Patrulla"
 
 
@@ -727,7 +727,7 @@ class Portaaviones(Barco):
         super(Portaaviones, self).__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_PORTAAVIONES
 
-    def __unicode__(self):
+    def __str__(self):
         return "Portaaviones"
 
 
@@ -771,8 +771,8 @@ class Submarino(Barco):
         """
         return self.veces_sumergimiento == 3
 
-    def __unicode__(self):
-        return u"Submarino"
+    def __str__(self):
+        return "Submarino"
 
 
 class Fragata(Barco):
@@ -783,7 +783,7 @@ class Fragata(Barco):
         super(Fragata, self).__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_FRAGATA
 
-    def __unicode__(self):
+    def __str__(self):
         return "Fragata"
 
 
@@ -794,14 +794,13 @@ class TableroVisible(models.Model):
     para el atacante.
     """
     jugador_atacante = models.ForeignKey(
-        Jugador, related_name='tableros_visibles')
-    tablero_atacado = models.ForeignKey(Tablero, related_name='visibles')
+        Jugador, related_name='tableros_visibles', on_delete=models.CASCADE)
+    tablero_atacado = models.ForeignKey(Tablero, related_name='visibles', on_delete=models.CASCADE)
     puntos_atacados = fields.ListField(blank=True, null=True)
     tiros_agua = fields.ListField(blank=True, null=True)
     tiros_escudo = fields.ListField(blank=True, null=True)
     hay_radar = models.BooleanField(default=False)
-    posicion_radar = models.CommaSeparatedIntegerField(
-        max_length=10, blank=True, null=True)  # es el largo de la tupla?
+    posicion_radar = fields.TupleField(blank=True, null=True)
     turno_del_radar = models.IntegerField(blank=True, null=True)
 
     @property
@@ -925,6 +924,6 @@ class TableroVisible(models.Model):
                 result[(x, y)] = celdas_espiadas[(x, y)]
         return result
 
-    def __unicode__(self):
-        return "Tablero de %s, segun %s" % \
-            (tablero_atacado.jugador, jugador_atacante)
+    def __str__(self):
+        return "Tablero de %s, segun %s" % (
+            self.tablero_atacado.jugador, self.jugador_atacante)

@@ -1,0 +1,7 @@
+.venv/
+*.pyc
+__pycache__/
+*.db
+batalla_naval.db
+.env
+*.log

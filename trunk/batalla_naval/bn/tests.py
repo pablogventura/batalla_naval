@@ -4,7 +4,7 @@
 import random
 
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.test.client import Client
 
 from django.contrib.auth.models import User
@@ -79,7 +79,7 @@ class RegistroUsuario(BNTestCase):
         """
         Crea un usuario y comprueba que se le inicie sesion.
         """
-        response = self.client.post(reverse('bn.views.nuevo_usuario'),
+        response = self.client.post(reverse('nuevo_usuario'),
                                     {'username': 'test',
                                      'email': 'test@test.com',
                                      'password1': 'test',
@@ -87,18 +87,18 @@ class RegistroUsuario(BNTestCase):
         self.assertEqual(User.objects.count(), 1)
         usuario = User.objects.get(pk=1)
         self.assert_(usuario.username == 'test')
-        self.assertRedirects(response, reverse('bn.views.menu_principal'))
+        self.assertRedirects(response, reverse('menu_principal'))
 
 
 class InicioSesion(BNTestCase):
     def test_inicia_sesion(self):
         usuario = User.objects.create_user('test', 'test@test.com', 'test')
-        response = self.client.post(reverse('django.contrib.auth.views.login'),
+        response = self.client.post(reverse('login'),
                                     {'username': 'test',
                                      'password': 'test', })
 
         self.assert_(usuario.username == 'test')
-        self.assertRedirects(response, reverse('bn.views.menu_principal'))
+        self.assertRedirects(response, reverse('menu_principal'))
 
 
 class CrearPartida(BNTestCase):
@@ -109,7 +109,7 @@ class CrearPartida(BNTestCase):
         self.client.login(username='test', password='test')
 
     def test_crea_partida(self):
-        response = self.client.post(reverse('bn.views.nueva_partida'),
+        response = self.client.post(reverse('nueva_partida'),
                                     {'nombre': 'PartidaTest',
                                      'cant_jugadores': 2,
                                      'cant_acorazados': 1,
@@ -137,7 +137,7 @@ class CrearPartida(BNTestCase):
         self.assertFalse(partida.terminada)
 
         self.assertRedirects(
-            response, reverse('bn.views.ubicar_barcos', args=(partida.id,)))
+            response, reverse('ubicar_barcos', args=(partida.id,)))
 
 
 class UnirsePartida(BNTestCase):
@@ -151,7 +151,7 @@ class UnirsePartida(BNTestCase):
 
     def test_unirse_partida(self):
         # veo que este la partida en el menu principal
-        response = self.client.get(reverse('bn.views.menu_principal'))
+        response = self.client.get(reverse('menu_principal'))
         self.assertContains(response, "PartidaTest")
         self.assertContains(response, "Unirse")
         self.assertContains(response, reverse(
@@ -159,7 +159,7 @@ class UnirsePartida(BNTestCase):
 
         # me uno
         response = self.client.get(
-            reverse('bn.views.ubicar_barcos', args=(self.partida.id,)))
+            reverse('ubicar_barcos', args=(self.partida.id,)))
         self.assertTemplateUsed(response, "ubicacion_barcos.html")
 
 
@@ -174,59 +174,59 @@ class UbicarBarcos(BNTestCase):
 
         #aca deberia ir algo que me una a partida-> Si???
     def test_ubicar_barcos(self):
-        response = self.client.get(reverse('bn.views.ubicar_barcos',
+        response = self.client.get(reverse('ubicar_barcos',
                                            args=(self.partida.id,)))
         self.assertContains(response, "Acorazado")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "A",
                                      'y': 1,
                                      'horizontal': False})
-        self.assertRedirects(response, reverse('bn.views.ubicar_barcos',
+        self.assertRedirects(response, reverse('ubicar_barcos',
                                                args=(self.partida.id,)))
 
-        response = self.client.get(reverse('bn.views.ubicar_barcos',
+        response = self.client.get(reverse('ubicar_barcos',
                                            args=(self.partida.id,)))
         self.assertContains(response, "Fragata")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "C",
                                      'y': 1,
                                      'horizontal': False})
-        self.assertRedirects(response, reverse('bn.views.ubicar_barcos',
+        self.assertRedirects(response, reverse('ubicar_barcos',
                                                args=(self.partida.id,)))
 
-        response = self.client.get(reverse('bn.views.ubicar_barcos',
+        response = self.client.get(reverse('ubicar_barcos',
                                            args=(self.partida.id,)))
         self.assertContains(response, "Portaaviones")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "E",
                                      'y': 1,
                                      'horizontal': False})
-        self.assertRedirects(response, reverse('bn.views.ubicar_barcos',
+        self.assertRedirects(response, reverse('ubicar_barcos',
                                                args=(self.partida.id,)))
 
-        response = self.client.get(reverse('bn.views.ubicar_barcos',
+        response = self.client.get(reverse('ubicar_barcos',
                                            args=(self.partida.id,)))
         self.assertContains(response, "Patrulla")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "G",
                                      'y': 1,
                                      'horizontal': False})
-        self.assertRedirects(response, reverse('bn.views.ubicar_barcos',
+        self.assertRedirects(response, reverse('ubicar_barcos',
                                                args=(self.partida.id,)))
 
-        response = self.client.get(reverse('bn.views.ubicar_barcos',
+        response = self.client.get(reverse('ubicar_barcos',
                                            args=(self.partida.id,)))
         self.assertContains(response, "Submarino")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "I",
                                      'y': 1,
@@ -234,7 +234,7 @@ class UbicarBarcos(BNTestCase):
 
         # el target_status_code es 302 porque ir a ubicar_barcos te tiene que
         # llevar a otra redireccion para ir a esperar jugadores
-        self.assertRedirects(response, reverse('bn.views.ubicar_barcos',
+        self.assertRedirects(response, reverse('ubicar_barcos',
                                                args=(self.partida.id,)),
                              target_status_code=302)
 
@@ -255,7 +255,7 @@ class EsperandoJugadores(BNTestCase):
         self.ubicar_barcos_predeterminadamente(self.tablero)
 
     def test_esperando(self):
-        response = self.client.get(reverse('bn.views.ubicar_barcos',
+        response = self.client.get(reverse('ubicar_barcos',
                                            args=(self.partida.id,)))
         self.assertRedirects(response, reverse(
             'bn.views.esperando_jugadores', args=(self.partida.id,)))
@@ -284,60 +284,60 @@ class IniciarPartida(BNTestCase):
         self.assert_(self.partida.cant_jugadores == 2)
 
     def test_iniciar_partida(self):
-        response = self.client.get(reverse('bn.views.ubicar_barcos',
+        response = self.client.get(reverse('ubicar_barcos',
                                            args=(self.partida.id,)))
         self.assertContains(response, "Acorazado")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "A", 'y': 1, 'horizontal': False})
         self.assertRedirects(response, reverse(
             'bn.views.ubicar_barcos', args=(self.partida.id,)))
 
         response = self.client.get(
-            reverse('bn.views.ubicar_barcos', args=(self.partida.id,)))
+            reverse('ubicar_barcos', args=(self.partida.id,)))
         self.assertContains(response, "Fragata")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "C", 'y': 1, 'horizontal': False})
         self.assertRedirects(response, reverse(
             'bn.views.ubicar_barcos', args=(self.partida.id,)))
 
         response = self.client.get(
-            reverse('bn.views.ubicar_barcos', args=(self.partida.id,)))
+            reverse('ubicar_barcos', args=(self.partida.id,)))
         self.assertContains(response, "Portaaviones")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "E", 'y': 1, 'horizontal': False})
         self.assertRedirects(response, reverse(
             'bn.views.ubicar_barcos', args=(self.partida.id,)))
 
         response = self.client.get(
-            reverse('bn.views.ubicar_barcos', args=(self.partida.id,)))
+            reverse('ubicar_barcos', args=(self.partida.id,)))
         self.assertContains(response, "Patrulla")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "G", 'y': 1, 'horizontal': False})
         self.assertRedirects(response, reverse(
             'bn.views.ubicar_barcos', args=(self.partida.id,)))
 
         response = self.client.get(
-            reverse('bn.views.ubicar_barcos', args=(self.partida.id,)))
+            reverse('ubicar_barcos', args=(self.partida.id,)))
         self.assertContains(response, "Submarino")
 
-        response = self.client.post(reverse('bn.views.ubicar_barcos',
+        response = self.client.post(reverse('ubicar_barcos',
                                             args=(self.partida.id,)),
                                     {'x': "I", 'y': 1, 'horizontal': False})
 
         response = self.client.get(
-            reverse('bn.views.ubicar_barcos', args=(self.partida.id,)))
+            reverse('ubicar_barcos', args=(self.partida.id,)))
 
-        response = self.client.get(reverse('bn.views.esperando_jugadores',
+        response = self.client.get(reverse('esperando_jugadores',
                                            args=(self.partida.id,)))
-        self.assertRedirects(response, reverse('bn.views.esperando_turno',
+        self.assertRedirects(response, reverse('esperando_turno',
                              args=(self.partida.id,)))
 
 
@@ -365,21 +365,21 @@ class AtaqueNormal(BNTestCase):
         self.partida.iniciar()
 
     def test_ataque_normal(self):
-        response = self.client.get(reverse('bn.views.elegir_enemigo',
+        response = self.client.get(reverse('elegir_enemigo',
                                            args=(self.partida.id,)))
 
         # compruebo que como hay un solo enemigo vaya a
         # atacarlo a el automaticamente
-        self.assertRedirects(response, reverse('bn.views.ataque',
+        self.assertRedirects(response, reverse('ataque',
                              args=(self.partida.id, self.jugador_enemigo.id)))
 
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         self.assertTemplateUsed(response, "atacar.html")
 
         response = self.client.post(
-            reverse('bn.views.ataque', args=(self.partida.id,
+            reverse('ataque', args=(self.partida.id,
                     self.jugador_enemigo.id)),
             {'x': "a", 'y': 1, 'tipo': 'N'})
 
@@ -417,22 +417,22 @@ class AtaquePotente(BNTestCase):
         self.partida.iniciar()
 
     def test_ataque_potente(self):
-        response = self.client.get(reverse('bn.views.elegir_enemigo',
+        response = self.client.get(reverse('elegir_enemigo',
                                            args=(self.partida.id,)))
 
         # compruebo que como hay un solo enemigo vaya a
         # atacarlo a el automaticamente
-        self.assertRedirects(response, reverse('bn.views.ataque',
+        self.assertRedirects(response, reverse('ataque',
                                                args=(self.partida.id,
                                                      self.jugador_enemigo.id)))
 
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                            self.jugador_enemigo.id)))
         self.assertTemplateUsed(response, "atacar.html")
 
         response = self.client.post(
-            reverse('bn.views.ataque', args=(self.partida.id,
+            reverse('ataque', args=(self.partida.id,
                     self.jugador_enemigo.id)),
             {'x': "a", 'y': 1, 'tipo': 'P'})
 
@@ -470,22 +470,22 @@ class AtaqueRadar(BNTestCase):
         self.partida.iniciar()
 
     def test_ataque_radar(self):
-        response = self.client.get(reverse('bn.views.elegir_enemigo',
+        response = self.client.get(reverse('elegir_enemigo',
                                            args=(self.partida.id,)))
 
         # compruebo que como hay un solo enemigo vaya a
         # atacarlo a el automaticamente
-        self.assertRedirects(response, reverse('bn.views.ataque',
+        self.assertRedirects(response, reverse('ataque',
                                                args=(self.partida.id,
                                                      self.jugador_enemigo.id)))
 
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         self.assertTemplateUsed(response, "atacar.html")
 
         response = self.client.post(
-            reverse('bn.views.ataque', args=(self.partida.id,
+            reverse('ataque', args=(self.partida.id,
                     self.jugador_enemigo.id)),
             {'x': "b", 'y': 2, 'tipo': 'R'})
 
@@ -543,7 +543,7 @@ class DerrotoOponenteyQuedanOponentes(BNTestCase):
         self.partida.iniciar()
 
     def test_derroto_oponente_y_quedan_mas(self):
-        response = self.client.get(reverse('bn.views.elegir_enemigo',
+        response = self.client.get(reverse('elegir_enemigo',
                                            args=(self.partida.id,)))
 
         # compruebo que como hay un solo enemigo vaya a
@@ -551,17 +551,17 @@ class DerrotoOponenteyQuedanOponentes(BNTestCase):
         # atacarlo a el automaticamente
         self.assertTemplateUsed(response, "elegir_enemigo.html")
 
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         self.assertTemplateUsed(response, "atacar.html")
 
         response = self.client.post(
-            reverse('bn.views.ataque', args=(self.partida.id,
+            reverse('ataque', args=(self.partida.id,
                     self.jugador_enemigo.id)),
             {'x': "a", 'y': 1, 'tipo': 'N'})
         response = self.client.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "a", 'y': 1, 'tipo': 'SD', 'hacia_proa': False})
 
         response = self.client2.post(
@@ -569,7 +569,7 @@ class DerrotoOponenteyQuedanOponentes(BNTestCase):
                 'bn.views.ataque', args=(self.partida.id, self.jugador.id)),
             {'x': "a", 'y': 1, 'tipo': 'N'})
         response = self.client2.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "a", 'y': 1, 'tipo': 'SD', 'hacia_proa': False})
 
         response = self.client3.post(
@@ -577,11 +577,11 @@ class DerrotoOponenteyQuedanOponentes(BNTestCase):
                 'bn.views.ataque', args=(self.partida.id, self.jugador.id)),
             {'x': "a", 'y': 1, 'tipo': 'N'})
         response = self.client3.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "a", 'y': 1, 'tipo': 'SD', 'hacia_proa': False})
 
         response = self.client.post(
-            reverse('bn.views.ataque', args=(self.partida.id,
+            reverse('ataque', args=(self.partida.id,
                     self.jugador_enemigo.id)),
             {'x': "a", 'y': 2, 'tipo': 'N'})
 
@@ -619,26 +619,26 @@ class DerrotoOponenteyGanoPartida(BNTestCase):
         self.partida.iniciar()
 
     def test_ganar_partida(self):
-        response = self.client.get(reverse('bn.views.elegir_enemigo',
+        response = self.client.get(reverse('elegir_enemigo',
                                            args=(self.partida.id,)))
 
         # compruebo que como hay un solo enemigo vaya a
         # atacarlo a el automaticamente
-        self.assertRedirects(response, reverse('bn.views.ataque',
+        self.assertRedirects(response, reverse('ataque',
                                                args=(self.partida.id,
                                                      self.jugador_enemigo.id)))
 
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         self.assertTemplateUsed(response, "atacar.html")
 
         response = self.client.post(
-            reverse('bn.views.ataque', args=(self.partida.id,
+            reverse('ataque', args=(self.partida.id,
                     self.jugador_enemigo.id)),
             {'x': "a", 'y': 1, 'tipo': 'N'})
         response = self.client.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "a", 'y': 1, 'tipo': 'SD', 'hacia_proa': False})
 
         response = self.client2.post(
@@ -646,15 +646,15 @@ class DerrotoOponenteyGanoPartida(BNTestCase):
                 'bn.views.ataque', args=(self.partida.id, self.jugador.id)),
             {'x': "a", 'y': 1, 'tipo': 'N'})
         response = self.client2.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "a", 'y': 1, 'tipo': 'SD', 'hacia_proa': False})
 
         response = self.client.post(
-            reverse('bn.views.ataque', args=(self.partida.id,
+            reverse('ataque', args=(self.partida.id,
                     self.jugador_enemigo.id)),
             {'x': "a", 'y': 2, 'tipo': 'N'})
         self.assertRedirects(
-            response, reverse('bn.views.ganador', args=(self.partida.id,)))
+            response, reverse('ganador', args=(self.partida.id,)))
 
 
 class MovimientoCorto(BNTestCase):
@@ -685,11 +685,11 @@ class MovimientoCorto(BNTestCase):
 
     def test_mov_corto(self):
 
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         # compruebo que ya ataco y me direccione a defensa
-        self.assertRedirects(response, reverse('bn.views.defensa',
+        self.assertRedirects(response, reverse('defensa',
                              args=(self.partida.id,)))
 
         response = self.client.get(reverse(
@@ -697,10 +697,10 @@ class MovimientoCorto(BNTestCase):
         self.assertTemplateUsed(response, "defender.html")
 
         response = self.client.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "a", 'y': 1, 'tipo': 'MC', 'hacia_proa': False})
 
-        self.assertRedirects(response, reverse('bn.views.esperando_turno',
+        self.assertRedirects(response, reverse('esperando_turno',
                              args=(self.partida.id,)))
         self.assertEqual(self.tablero.acorazado_set.all()[0].y, 1)
 
@@ -733,11 +733,11 @@ class MovimientoLargo(BNTestCase):
 
     def test_mov_largo(self):
 
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         # compruebo que ya ataco y me direccione a defensa
-        self.assertRedirects(response, reverse('bn.views.defensa',
+        self.assertRedirects(response, reverse('defensa',
                              args=(self.partida.id,)))
 
         response = self.client.get(reverse(
@@ -745,10 +745,10 @@ class MovimientoLargo(BNTestCase):
         self.assertTemplateUsed(response, "defender.html")
 
         response = self.client.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "c", 'y': 1, 'tipo': 'ML', 'hacia_proa': False})
 
-        self.assertRedirects(response, reverse('bn.views.esperando_turno',
+        self.assertRedirects(response, reverse('esperando_turno',
                              args=(self.partida.id,)))
         self.assertEqual(self.tablero.fragata_set.all()[0].y, 2)
 
@@ -780,11 +780,11 @@ class Escudo(BNTestCase):
         self.jugador.save()
 
     def test_escudo(self):
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         # compruebo que ya ataco y me direccione a defensa
-        self.assertRedirects(response, reverse('bn.views.defensa',
+        self.assertRedirects(response, reverse('defensa',
                              args=(self.partida.id,)))
 
         response = self.client.get(reverse(
@@ -792,10 +792,10 @@ class Escudo(BNTestCase):
         self.assertTemplateUsed(response, "defender.html")
 
         response = self.client.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "c", 'y': 3, 'tipo': 'E', 'hacia_proa': False})
 
-        self.assertRedirects(response, reverse('bn.views.esperando_turno',
+        self.assertRedirects(response, reverse('esperando_turno',
                              args=(self.partida.id,)))
         mi_tablero = Tablero.objects.all()[0]
         for x in range(0, 9):
@@ -833,11 +833,11 @@ class Sumergimiento(BNTestCase):
         self.jugador.save()
 
     def test_sumergimiento(self):
-        response = self.client.get(reverse('bn.views.ataque',
+        response = self.client.get(reverse('ataque',
                                            args=(self.partida.id,
                                                  self.jugador_enemigo.id)))
         # compruebo que ya ataco y me direccione a defensa
-        self.assertRedirects(response, reverse('bn.views.defensa',
+        self.assertRedirects(response, reverse('defensa',
                              args=(self.partida.id,)))
 
         response = self.client.get(reverse(
@@ -845,10 +845,10 @@ class Sumergimiento(BNTestCase):
         self.assertTemplateUsed(response, "defender.html")
 
         response = self.client.post(
-            reverse('bn.views.defensa', args=(self.partida.id,)),
+            reverse('defensa', args=(self.partida.id,)),
             {'x': "i", 'y': 1, 'tipo': 'SS', 'hacia_proa': False})
 
-        self.assertRedirects(response, reverse('bn.views.esperando_turno',
+        self.assertRedirects(response, reverse('esperando_turno',
                              args=(self.partida.id,)))
         mi_submarino = self.tablero.submarino_set.all()[0]
 
@@ -878,12 +878,12 @@ class AbandonarPartidaNoIniciada(BNTestCase):
 
     def test_abandonar_partida_no_iniciada(self):
         response = self.client.get(
-            reverse('bn.views.abandonar', args=(self.partida.id,)))
-        self.assertRedirects(response, reverse('bn.views.menu_principal'))
+            reverse('abandonar', args=(self.partida.id,)))
+        self.assertRedirects(response, reverse('menu_principal'))
         self.assertEqual(self.partida.jugador_set.count(), 1)
         response = self.client2.get(
-            reverse('bn.views.abandonar', args=(self.partida.id,)))
-        self.assertRedirects(response, reverse('bn.views.menu_principal'))
+            reverse('abandonar', args=(self.partida.id,)))
+        self.assertRedirects(response, reverse('menu_principal'))
         self.assertEqual(Partida.objects.count(), 0)
 
 
@@ -912,7 +912,7 @@ class AbandonarPartidaIniciada(BNTestCase):
         self.partida.iniciar()
 
     def test_abandonar_partida_iniciada(self):
-        self.client.get(reverse('bn.views.rendirse', args=(self.partida.id,)))
+        self.client.get(reverse('rendirse', args=(self.partida.id,)))
         self.assertEqual(
             self.partida.jugador_set.filter(derrotado=True).count(), 1)
         self.assertEqual(
@@ -925,11 +925,11 @@ class CerrarSesion(BNTestCase):
         self.usuario = User.objects.create_user(
             'test', 'test@test.com', 'test')
         self.client.login(username='test', password='test')
-        self.client.get(reverse('bn.views.menu_principal'))
+        self.client.get(reverse('menu_principal'))
 
     def test_cerrar_sesion(self):
         #self.assertContains(response, 'Cerrar Sesión')
-        self.client.get(reverse('django.contrib.auth.views.logout_then_login'))
-        response = self.client.get(reverse('bn.views.menu_principal'))
+        self.client.get(reverse('logout'))
+        response = self.client.get(reverse('menu_principal'))
         self.assertRedirects(response, reverse(
             'django.contrib.auth.views.login') + '?next=/menu/')

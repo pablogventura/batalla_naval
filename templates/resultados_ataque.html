@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block titulo %}Batalla Naval - Resultados del Ataque - Partida: {{partida.nombre}} {% endblock %}
+
+{% block contenido %}
+<h1>Partida: {{partida.nombre}}</h1>
+<p>Numero de ronda: {{partida.numero_ronda_actual}}<br></p>
+<p>Sesión de {{usuario.username}}<br></p>
+<p>Resultado de atacar a {{enemigo}}<br></p>
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+
+{% include "tablero.html" %}
+
+<a href="{% url 'defensa' partida.id %}">Pasar al movimiento de defensa</a>
+<a href="{% url 'rendirse' partida.id %}">Rendirse</a>
+{% endblock %}

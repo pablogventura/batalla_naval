@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block titulo %}Batalla Naval - Elegir Enemigo a Atacar - Partida: {{ partida.nombre }}{% endblock %}
+
+{% block contenido %}
+<h1>Atacar</h1>
+<p>Sesión de {{usuario.username}}<br></p>
+<p>Numero de ronda: {{partida.numero_ronda_actual}}<br></p>
+<h2>Partidas Actuales:</h2>
+
+<ul>
+{% for jugador in jugadores %}
+    {% if not jugador.usuario.username == usuario.username %}
+        <li>{{ jugador.usuario.username }}<a href="{% url 'ataque' partida.id jugador.id %}">Atacar</a></li>
+    {% endif %}
+{% endfor %}
+<a href="{% url 'rendirse' partida.id %}">Rendirse</a>
+</ul>
+{% endblock %}
