@@ -8,5 +8,6 @@ if __name__ == "__main__":
 
     from django.core.management import execute_from_command_line
 
-    argv = [sys.argv[0], "runserver"] + sys.argv[1:]
+    port = sys.argv[1] if len(sys.argv) > 1 else "5000"
+    argv = [sys.argv[0], "runserver", port]
     execute_from_command_line(argv)
