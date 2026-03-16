@@ -1,0 +1,15 @@
+{% load staticfiles %}
+<html>
+<head>
+<link rel="{% static style.css %}" type="stylesheet/css" />
+<title>Batalla Naval</title>
+</head>
+<body>
+<font size=10> Ha sido derrotado </font>
+<p class="parrafo_chico"> Usuario: {{ usuario }} </p>
+<p> Partida: {{ partida }} </p>
+<p> Numero de aciertos: {{ aciertos }} </p>
+<p> Daños recibidos: {{ celdas_tocadas }} </p>
+<a href="/menu/">Ir a menu principal</a>
+</body>
+</html>

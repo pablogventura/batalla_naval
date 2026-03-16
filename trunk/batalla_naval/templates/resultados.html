@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block titulo %}Batalla Naval - Resultados - Partida: {{ partida.nombre }}{% endblock %}
+
+{% block contenido %}
+<h1> Resultados de la partida {{ partida }}</h1>
+<p></p>
+<p>Ganador: {{ ganador }}</p>
+<p></p>
+<p>Perdedores:</p>
+    {% for perdedor in perdedores %}
+        <li>{{ perdedor }}</li>
+    {% endfor %}
+<p></p>
+<a href="{% url bn.views.menu_principal %}">Ir a menu principal</a>
+{% endblock %}

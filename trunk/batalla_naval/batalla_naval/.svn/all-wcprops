@@ -1,0 +1,29 @@
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/2012/is/grupo02/svn/!svn/ver/158/trunk/batalla_naval/batalla_naval
+END
+wsgi.py
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/2012/is/grupo02/svn/!svn/ver/30/trunk/batalla_naval/batalla_naval/wsgi.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/2012/is/grupo02/svn/!svn/ver/30/trunk/batalla_naval/batalla_naval/__init__.py
+END
+settings.py
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/2012/is/grupo02/svn/!svn/ver/158/trunk/batalla_naval/batalla_naval/settings.py
+END
+urls.py
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/2012/is/grupo02/svn/!svn/ver/155/trunk/batalla_naval/batalla_naval/urls.py
+END

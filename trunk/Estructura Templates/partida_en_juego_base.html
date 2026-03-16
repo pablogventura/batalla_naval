@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+
+<title> Batalla Naval - Partida {{ partida.nombre }} </title>
+
+{% endblock%}
+
+{% block body %}
+
+
+    <h1>Jugando partida {{ partida.nombre }}
+
+
+    {% block contenido %} 
+    
+    {% endblock %}    
+
+{% endblock %}

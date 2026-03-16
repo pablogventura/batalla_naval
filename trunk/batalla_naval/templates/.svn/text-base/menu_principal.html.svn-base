@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<META HTTP-EQUIV="REFRESH" CONTENT="5;URL={% url bn.views.menu_principal %}"> 
+{% endblock %}
+
+{% block titulo %}Batalla Naval - Menú Principal{% endblock %}
+
+{% block contenido %}
+<h1>Batalla Naval</h1>
+<p>Sesión de {{usuario.username}}<br></p>
+<h2>Partidas Actuales:</h2>
+{% if partidas_actuales %}
+    <ul>
+    {% for partida in partidas_actuales %}
+        {% if partida.iniciada %}
+        <li>{{ partida.nombre }} - En Curso</li>
+        {% else %}
+        <li>{{ partida.nombre }} - Esperando Jugadores <a href="{% url bn.views.ubicar_barcos partida.id %}">Unirse</a></li>
+        {% endif %}
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No hay partidas en curso.</p>
+{% endif %}
+<br>
+<a href="{% url bn.views.nueva_partida %}">Crear Nueva Partida</a><br>
+<br>
+<a href="{% url django.contrib.auth.views.logout_then_login %}">Cerrar Sesión</a><br>
+<br>
+<br>
+{% endblock %}
+

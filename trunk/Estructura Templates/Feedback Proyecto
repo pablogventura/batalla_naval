@@ -1,0 +1,29 @@
+Feedback
+
+---Usar herencia de templates -> https://docs.djangoproject.com/en/dev/topics/templates/#template-inheritance
+
+Evitar el uso de import *
+
+Nombre amigable en los model.fields
+
+Leer sobre unicode_literals
+
+--Documentar Models
+
+Excepciones -> excepcions.py
+
+---No hardcodear URLS!! https://docs.djangoproject.com/en/dev/topics/http/urls/#reverse-resolution-of-urls
+
+Usar render
+
+Usar p = get_object_or_404(Partida, partida_id)
+
+--Documentar TODO!
+
+Con DEBUG=False
+404.html
+500.html
+
+--Usar form.save()
+
+---Mejorar indentación del html

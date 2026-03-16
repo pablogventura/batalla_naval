@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+
+{% block titulo %}Batalla Naval - Defendiendo - Partida: {{ partida.nombre }}{% endblock %}
+
+{% block contenido %}
+
+<h1>Partida: {{partida.nombre}}</h1>
+<p>Numero de ronda: {{partida.numero_ronda_actual}}<br></p>
+<p>Sesión de {{usuario.username}}<br></p>
+<p>Defendiendo<br></p>
+{% if error %}
+<p>{{ error }}</p>
+{% endif %}
+
+{% include "tablero.html" %}
+
+<a href="{% url bn.views.rendirse partida.id %}">Rendirse</a>
+<form action="{% url bn.views.defensa partida.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Defender" />
+</form>
+
+<script>
+    $("select").change(function () {
+        var seleccion;
+        seleccion=$("select option:selected").text();
+        if (seleccion == "Saltear Defensa")
+        {
+            $("#id_x").fadeOut(500);
+            $("label[for='id_x']").fadeOut(500);
+            $("#id_y").fadeOut(500);
+            $("label[for='id_y']").fadeOut(500);
+            $("#id_hacia_proa").fadeOut(500);
+            $("label[for='id_hacia_proa']").fadeOut(500);
+        }
+        else
+        {
+            if (seleccion == "Escudo" || seleccion == "Sumergimiento")
+            {
+                $("#id_x").fadeIn(500);
+                $("label[for='id_x']").fadeIn(500);
+                $("#id_y").fadeIn(500);
+                $("label[for='id_y']").fadeIn(500);
+                $("#id_hacia_proa").fadeOut(500);
+                $("label[for='id_hacia_proa']").fadeOut(500);
+            }
+            else
+            {
+                $("#id_x").fadeIn(500);
+                $("label[for='id_x']").fadeIn(500);
+                $("#id_y").fadeIn(500);
+                $("label[for='id_y']").fadeIn(500);
+                $("#id_hacia_proa").fadeIn(500);
+                $("label[for='id_hacia_proa']").fadeIn(500);
+            }
+        }
+    })
+    .change();
+</script>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block titulo %}Batalla Naval - Ubicando Barcos - Partida: {{partida.nombre}} {% endblock %}
+
+{% block contenido %}
+
+<h1>Partida: {{partida.nombre}}</h1>
+<p>Sesión de {{usuario.username}}<br></p>
+<p>Colocando un {{barco}}<br></p>
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+
+{% include "tablero.html" %}
+
+<form action="{% url bn.views.ubicar_barcos partida.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Ubicar" />
+    <a href="{% url bn.views.abandonar partida.id %}">Salir de la partida</a>
+</form>
+
+{% endblock %}

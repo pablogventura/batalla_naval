@@ -1,0 +1,21 @@
+{% load mytags %}
+<table class="tablero" BORDER="0" CELLSPACING="0"  cellpadding="0">
+{% for y in tablero.lista_alto %}
+   <TR class="tr_tablero">
+        <TD class="pos_y" WIDTH="32" HEIGHT="32">
+            {{y}}
+        </TD>
+        {% for x in tablero.lista_ancho %}
+            {% if y == ' ' %}
+            <TD class="pos_x" WIDTH="32" HEIGHT="32">
+                {{x}}
+            </TD>
+            {% else %}
+            <TD class="celda" WIDTH="32" HEIGHT="32">
+                {% render_celda celdas x y %}
+            </TD>
+            {% endif %}
+        {% endfor %}
+   </TR>
+{% endfor %}
+</table>

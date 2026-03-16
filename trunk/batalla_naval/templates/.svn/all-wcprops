@@ -1,0 +1,119 @@
+K 25
+svn:wc:ra_dav:version-url
+V 63
+/2012/is/grupo02/svn/!svn/ver/153/trunk/batalla_naval/templates
+END
+defender.html
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/2012/is/grupo02/svn/!svn/ver/149/trunk/batalla_naval/templates/defender.html
+END
+nueva_partida.html
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/nueva_partida.html
+END
+esperando_jugadores.html
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/esperando_jugadores.html
+END
+derrotado.html
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/derrotado.html
+END
+resultados_ataque.html
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/resultados_ataque.html
+END
+resultados.html
+K 25
+svn:wc:ra_dav:version-url
+V 79
+/2012/is/grupo02/svn/!svn/ver/146/trunk/batalla_naval/templates/resultados.html
+END
+ubicacion_barcos.html
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/2012/is/grupo02/svn/!svn/ver/142/trunk/batalla_naval/templates/ubicacion_barcos.html
+END
+tablero.html
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/2012/is/grupo02/svn/!svn/ver/143/trunk/batalla_naval/templates/tablero.html
+END
+atacar.html
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/atacar.html
+END
+nuevo_usuario.html
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/2012/is/grupo02/svn/!svn/ver/141/trunk/batalla_naval/templates/nuevo_usuario.html
+END
+500.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/2012/is/grupo02/svn/!svn/ver/153/trunk/batalla_naval/templates/500.html
+END
+menu_principal.html
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/2012/is/grupo02/svn/!svn/ver/148/trunk/batalla_naval/templates/menu_principal.html
+END
+404.html
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/2012/is/grupo02/svn/!svn/ver/153/trunk/batalla_naval/templates/404.html
+END
+esperando_turno.html
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/esperando_turno.html
+END
+celda.html
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/2012/is/grupo02/svn/!svn/ver/142/trunk/batalla_naval/templates/celda.html
+END
+login.html
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/login.html
+END
+elegir_enemigo.html
+K 25
+svn:wc:ra_dav:version-url
+V 83
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/elegir_enemigo.html
+END
+base.html
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/2012/is/grupo02/svn/!svn/ver/149/trunk/batalla_naval/templates/base.html
+END
+ganador.html
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/2012/is/grupo02/svn/!svn/ver/138/trunk/batalla_naval/templates/ganador.html
+END

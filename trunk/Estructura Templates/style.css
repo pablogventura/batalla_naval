@@ -1,0 +1,21 @@
+p {
+    font-size: 15px;    
+    background-color: green;
+}
+
+h1 {
+    font-size: 20px;
+}
+
+
+
+.parrafo_chico {
+    background-color: blue;
+    font: bold;
+}
+
+<p class="parrafo_chico">
+<p>
+
+#prueba {
+}

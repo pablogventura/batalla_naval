@@ -1,0 +1,65 @@
+K 25
+svn:wc:ra_dav:version-url
+V 56
+/2012/is/grupo02/svn/!svn/ver/184/trunk/batalla_naval/bn
+END
+admin.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/2012/is/grupo02/svn/!svn/ver/117/trunk/batalla_naval/bn/admin.py
+END
+celda.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/2012/is/grupo02/svn/!svn/ver/147/trunk/batalla_naval/bn/celda.py
+END
+decoradores.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/2012/is/grupo02/svn/!svn/ver/151/trunk/batalla_naval/bn/decoradores.py
+END
+views.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/2012/is/grupo02/svn/!svn/ver/181/trunk/batalla_naval/bn/views.py
+END
+__init__.py
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/2012/is/grupo02/svn/!svn/ver/30/trunk/batalla_naval/bn/__init__.py
+END
+tests.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/2012/is/grupo02/svn/!svn/ver/185/trunk/batalla_naval/bn/tests.py
+END
+models.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/2012/is/grupo02/svn/!svn/ver/183/trunk/batalla_naval/bn/models.py
+END
+excepciones.py
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/2012/is/grupo02/svn/!svn/ver/127/trunk/batalla_naval/bn/excepciones.py
+END
+fields.py
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/2012/is/grupo02/svn/!svn/ver/139/trunk/batalla_naval/bn/fields.py
+END
+forms.py
+K 25
+svn:wc:ra_dav:version-url
+V 65
+/2012/is/grupo02/svn/!svn/ver/144/trunk/batalla_naval/bn/forms.py
+END

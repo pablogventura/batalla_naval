@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+
+{% block titulo %}Batalla Naval - Atacando - Partida: {{ partida.nombre }}{% endblock %}
+
+{% block contenido %}
+
+<h1>Partida: {{partida.nombre}}</h1>
+<p>Numero de ronda: {{partida.numero_ronda_actual}}<br></p>
+<p>Sesión de {{usuario.username}}<br></p>
+<p>Atacando a {{enemigo}}<br></p>
+{% if error %}
+    <p>{{ error }}</p>
+{% endif %}
+
+{% include "tablero.html" %}
+
+{% if not jugadores.count <= 2 %}
+    <a href="{% url bn.views.elegir_enemigo partida.id %}">Elegir otro enemigo</a>
+{% endif %}
+<a href="{% url bn.views.rendirse partida.id %}">Rendirse</a>
+<form action="{% url bn.views.ataque partida.id enemigo.id %}" method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <input type="submit" value="Atacar" />
+</form>
+{% endblock %}
