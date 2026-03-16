@@ -1,8 +1,19 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
 
-from bn.models import *
 from django.contrib import admin
+
+from bn.models import (
+    Acorazado,
+    Fragata,
+    Jugador,
+    Partida,
+    Patrulla,
+    Portaaviones,
+    Radar,
+    Submarino,
+    Tablero,
+    TableroVisible,
+)
 
 admin.site.register(Partida)
 admin.site.register(Tablero)

@@ -1,0 +1,6 @@
+-r requirements.txt
+ruff>=0.8.0
+mypy>=1.13.0
+django-stubs>=5.0.0
+coverage[toml]>=7.0.0
+pytest-django>=4.9.0

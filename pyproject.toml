@@ -1,0 +1,66 @@
+[project]
+name = "batalla-naval"
+version = "0.1.0"
+description = "Laboratorio batalla naval en Django"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "Django>=5.2,<5.3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "ruff>=0.8.0",
+    "mypy>=1.13.0",
+    "django-stubs>=5.0.0",
+    "coverage[toml]>=7.0.0",
+    "pytest-django>=4.9.0",
+]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 88
+exclude = ["migrations", ".venv", "__pycache__", "*.pyc"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "C4", "UP"]
+
+[tool.ruff.lint.per-file-ignores]
+"bn/migrations/*" = ["ALL"]
+"bn/tests.py" = ["F403", "F405"]
+"bn/models.py" = ["F403", "F405"]
+"bn/decoradores.py" = ["UP047"]
+
+[tool.ruff.format]
+quote-style = "double"
+
+[tool.mypy]
+python_version = "3.12"
+plugins = ["mypy_django_plugin.main"]
+strict = false
+ignore_missing_imports = true
+exclude = ["migrations", "\\.venv"]
+# Relajado para no fallar; se puede endurecer poco a poco
+disable_error_code = ["assignment", "union-attr", "attr-defined", "misc", "return"]
+
+[tool.django-stubs]
+django_settings_module = "batalla_naval.settings"
+
+[tool.coverage.run]
+source = ["bn", "batalla_naval"]
+omit = ["*/migrations/*", "*/.venv/*", "*/tests.py"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+]
+fail_under = 50
+
+[tool.pytest.ini_options]
+DJANGO_SETTINGS_MODULE = "batalla_naval.settings"
+addopts = "-v"
+testpaths = ["bn"]
+python_files = ["tests.py"]

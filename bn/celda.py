@@ -1,15 +1,28 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
+
+from __future__ import annotations
 
 from django.template.loader import render_to_string
 
-class Celda(object):
+
+class Celda:
     """
-    Clase que para representar una celda del tablero.
+    Clase que representa una celda del tablero.
     """
-    def __init__(self, x, y, barco=None, hay_barco=False, hay_disparo=False,
-                 hundido=False, hay_escudo=False, hay_radar=False,
-                 sumergido=False, tocada=False):
+
+    def __init__(
+        self,
+        x: int,
+        y: int,
+        barco: tuple[str, int, bool] | None = None,
+        hay_barco: bool = False,
+        hay_disparo: bool = False,
+        hundido: bool = False,
+        hay_escudo: bool = False,
+        hay_radar: bool = False,
+        sumergido: bool = False,
+        tocada: bool = False,
+    ) -> None:
         self.x = x
         self.y = y
         self.hay_barco = hay_barco
@@ -18,18 +31,24 @@ class Celda(object):
         self.hay_radar = hay_radar
         self.sumergido = sumergido
         self.tocada = tocada
-        if hay_barco:
+        if hay_barco and barco is not None:
             self.tipo_barco, self.seccion_barco, self.horizontal = barco
+        else:
+            self.tipo_barco = ""
+            self.seccion_barco = 0
+            self.horizontal = True
         self.hay_disparo = hay_disparo
 
-    def __eq__(self, other):
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, Celda):
+            return NotImplemented
         return self.x == other.x and self.y == other.y
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash((self.x, self.y))
 
     @property
-    def texto(self):
+    def texto(self) -> str:
         """
         Devuelve un texto para la renderizacion de la celda.
         """
@@ -51,72 +70,59 @@ class Celda(object):
         return result
 
     @property
-    def render(self):
+    def render(self) -> str:
         """
         Devuelve la renderizacion en html de la celda usando un template
         especifico.
         """
-        imagenes = []
+        imagenes: list[str] = []
         if self.hay_barco:
-            path = 'images/' + self.tipo_barco[:3].lower()
+            path = "images/" + self.tipo_barco[:3].lower()
             path += str(self.seccion_barco)
             if self.horizontal:
-                path += 'h'
+                path += "h"
             else:
-                path += 'v'
+                path += "v"
         else:
-            path = 'images/agua'
+            path = "images/agua"
         imagenes.append(path + ".png")
-        
+
         if self.hay_radar:
-            path = 'images/radar'
+            path = "images/radar"
             imagenes.append(path + ".png")
-            
+
         if self.sumergido:
-            path = 'images/sumergido'
+            path = "images/sumergido"
             imagenes.append(path + ".png")
-            
+
         if self.hay_escudo and not self.hay_barco:
-            path = 'images/escudo' # escudo opaco
+            path = "images/escudo"
             imagenes.append(path + ".png")
-            
+
         if self.tocada and not self.hundido:
-            path = 'images/tocado'
+            path = "images/tocado"
             imagenes.append(path + ".png")
-            
+
         if self.hay_disparo and not self.tocada:
-            path = 'images/disparo'
+            path = "images/disparo"
             imagenes.append(path + ".png")
-            
+
         if self.hundido:
-            path = 'images/hundido'
+            path = "images/hundido"
             imagenes.append(path + ".png")
 
         if self.hay_escudo and self.hay_barco:
-            path = 'images/escudo_p' # escudo semitransparente
+            path = "images/escudo_p"
             imagenes.append(path + ".png")
-        return render_to_string('celda.html',{'imagenes': imagenes})
+        return render_to_string("celda.html", {"imagenes": imagenes})
 
-    def __str__(self):
-        return self.__unicode__()
+    def __str__(self) -> str:
+        return "Celda en " + str(self.x) + "," + str(self.y)
 
-    def es_vecino(self, other):
+    def es_vecino(self, other: Celda) -> bool:
         """
         Devuelve true si la celda se toca con otra que venga en other.
         """
         a = abs(self.x - other.x)
         b = abs(self.y - other.y)
         return a <= 1 and b <= 1
-
-    def __cmp__(self, other):
-        s = (self.x, self.y)
-        o = (other.x, other.y)
-        if s > o:
-            return 1
-        elif s == o:
-            return 0
-        else:
-            return - 1
-
-    def __unicode__(self):
-        return u"Celda en " + str(self.x) + "," + str(self.y)

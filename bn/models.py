@@ -1,9 +1,10 @@
 #!/usr/bin/env python
-# -*- coding: utf8 -*-
 
-from django.db import models
+from __future__ import annotations
+
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.db import models
 
 from . import fields
 from .celda import Celda
@@ -20,8 +21,8 @@ class Partida(models.Model):
     """
     Modelo que representa a una partida.
     """
-    nombre = models.CharField(
-        default='Nombre de la Partida', max_length=200)
+
+    nombre = models.CharField(default="Nombre de la Partida", max_length=200)
     cant_jugadores = models.PositiveIntegerField(default=2)
     cant_acorazados = models.PositiveIntegerField(default=1)
     cant_patrullas = models.PositiveIntegerField(default=1)
@@ -44,7 +45,7 @@ class Partida(models.Model):
             except ObjectDoesNotExist:
                 pass
 
-    def debe_iniciarse(self):
+    def debe_iniciarse(self) -> bool:
         """
         Devuelve un booleano que indica que la partida esta en condiciones
         de iniciarse.
@@ -68,12 +69,12 @@ class Partida(models.Model):
         for i in self.jugador_set.all():
             for j in self.jugador_set.all():
                 if i != j:
-                    t = TableroVisible(jugador_atacante=i,
-                                       tablero_atacado=j.tablero)
+                    t = TableroVisible(jugador_atacante=i, tablero_atacado=j.tablero)
                     t.save()
 
-        self.jugador_actual = self.jugador_set.all(
-        ).order_by('usuario__username', 'color')[0]
+        self.jugador_actual = self.jugador_set.all().order_by(
+            "usuario__username", "color"
+        )[0]
         self.jugador_actual.es_su_turno = True
         self.jugador_actual.ya_ataco = False
         self.jugador_actual.save()
@@ -86,8 +87,13 @@ class Partida(models.Model):
         """
         Agrega un jugador a la partida.
         """
-        self.jugador_set.create(usuario=usuario, color=None, es_su_turno=False,
-                                tablero=None, ubicaciones_confirmadas=False)
+        self.jugador_set.create(
+            usuario=usuario,
+            color=None,
+            es_su_turno=False,
+            tablero=None,
+            ubicaciones_confirmadas=False,
+        )
 
     def eliminar_jugador(self, jugador):
         # las vistas ya nos dan el jugador entero
@@ -101,13 +107,17 @@ class Partida(models.Model):
         self.jugador_actual.es_su_turno = False
         self.jugador_actual.save()
 
-        #doble guion bajo va a los atributos del foregin key
+        # doble guion bajo va a los atributos del foregin key
         jugadores = list(
-            self.jugador_set.filter(derrotado=False).order_by('usuario__username', 'color'))
+            self.jugador_set.filter(derrotado=False).order_by(
+                "usuario__username", "color"
+            )
+        )
 
         # buscar el jugador actual en la lista y elegir el siguiente?
-        jugador_siguiente = jugadores[(jugadores.index(
-            self.jugador_actual) + 1) % len(jugadores)]
+        jugador_siguiente = jugadores[
+            (jugadores.index(self.jugador_actual) + 1) % len(jugadores)
+        ]
 
         jugador_siguiente.es_su_turno = True
         jugador_siguiente.ya_ataco = False
@@ -132,20 +142,23 @@ class Jugador(models.Model):
     """
     Modelo que representa a un jugador, de un usuario, para alguna partida.
     """
+
     usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     partida = models.ForeignKey(Partida, on_delete=models.CASCADE)
     color = models.PositiveIntegerField(default=0)
     es_su_turno = models.BooleanField(
-        default=False)  # preguntar si hay que guardarlo en la base de datos
+        default=False
+    )  # preguntar si hay que guardarlo en la base de datos
     ya_ataco = models.BooleanField(
-        default=False)  # guarda si en su turno el jugador ya ataco
+        default=False
+    )  # guarda si en su turno el jugador ya ataco
     ubicaciones_confirmadas = models.BooleanField(default=False)
     derrotado = models.BooleanField(default=False)
 
     def __str__(self):
         return self.usuario.username
 
-    def puntos(self):
+    def puntos(self) -> tuple[int, int]:
         """
         Devuelve una tupla con la cantidad de celdas enemigas atacadas y las
         celdas propias atacadas.
@@ -172,6 +185,7 @@ class Tablero(models.Model):
     """
     Modelo que representa a un tablero de un jugador.
     """
+
     ancho = models.PositiveIntegerField()
     cant_acorazados = models.PositiveIntegerField()
     cant_patrullas = models.PositiveIntegerField()
@@ -181,8 +195,7 @@ class Tablero(models.Model):
     hay_escudo = models.BooleanField(default=False)
     posicion_escudo = fields.TupleField(blank=True, null=True)
     # en vez de veces_radar va radar en jugador
-    ronda_ultimo_escudo = models.IntegerField(
-        default=-4)  # para que pueda al principio
+    ronda_ultimo_escudo = models.IntegerField(default=-4)  # para que pueda al principio
     jugador = models.OneToOneField(Jugador, on_delete=models.CASCADE)
 
     @property
@@ -248,7 +261,7 @@ class Tablero(models.Model):
                 result[j] = c[j]
                 if self._en_escudo(j):
                     result[j].hay_escudo = True
-        for (x, y) in result.keys():
+        for x, y in result.keys():
             if (x, y) in tiros_agua:
                 result[(x, y)].hay_disparo = True
             if (x, y) in tiros_escudo:
@@ -265,15 +278,15 @@ class Tablero(models.Model):
         assert not self.portaaviones_set.all().exists()
         assert not self.submarino_set.all().exists()
 
-        for i in range(self.cant_acorazados):
+        for _ in range(self.cant_acorazados):
             self.acorazado_set.create()
-        for i in range(self.cant_fragatas):
+        for _ in range(self.cant_fragatas):
             self.fragata_set.create()
-        for i in range(self.cant_patrullas):
+        for _ in range(self.cant_patrullas):
             self.patrulla_set.create()
-        for i in range(self.cant_portaaviones):
+        for _ in range(self.cant_portaaviones):
             self.portaaviones_set.create()
-        for i in range(self.cant_submarinos):
+        for _ in range(self.cant_submarinos):
             self.submarino_set.create()
 
     def barco_sin_ubicar(self):
@@ -401,7 +414,7 @@ class Tablero(models.Model):
         """
         return len(self.jugador.radar.filter(contra=jugador_enemigo)) == 2
 
-    def cant_barcos_sin_hundir(self):
+    def cant_barcos_sin_hundir(self) -> int:
         """
         Devuelve la candidad de barcos que no han sido hundidos.
         """
@@ -438,7 +451,7 @@ class Tablero(models.Model):
         assert not self.hay_escudo
         if not self.lleva_4_turnos_sin_escudo():
             raise EscudoYaUsado()
-        #import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
         x, y = posicion
         if not (1 <= x < self.ancho - 1 and 1 <= y < self.ancho - 1):
             raise EscudoFueraDeTablero()
@@ -446,7 +459,7 @@ class Tablero(models.Model):
         self.posicion_escudo = posicion
         self.ronda_ultimo_escudo = self.jugador.partida.numero_ronda_actual
         self.save()
-        
+
     def sacar_escudo(self):
         """
         Saca el escudo.
@@ -506,8 +519,11 @@ class Radar(models.Model):
     Modelo que representa el haber hecho un ataque de radar.
     Sirve para llevar la cuenta de los radares y cumplir el maximo de radares.
     """
-    desde = models.ForeignKey('Jugador', related_name='radar', on_delete=models.CASCADE)
-    contra = models.ForeignKey('Jugador', related_name='radar_contra_mi', on_delete=models.CASCADE)
+
+    desde = models.ForeignKey("Jugador", related_name="radar", on_delete=models.CASCADE)
+    contra = models.ForeignKey(
+        "Jugador", related_name="radar_contra_mi", on_delete=models.CASCADE
+    )
 
 
 class Barco(models.Model):
@@ -515,6 +531,7 @@ class Barco(models.Model):
     Modelo abstracto que sirve para dar los atributos y metodos generales
     de los barcos.
     """
+
     # x,y definen la posicion de la proa del barco
     x = models.PositiveIntegerField(blank=True, null=True)
     y = models.PositiveIntegerField(blank=True, null=True)
@@ -610,11 +627,18 @@ class Barco(models.Model):
             tipo_barco = type(self).__name__
 
             tocada = i in self.puntos_tocados
-            sumergido = type(self) == Submarino and self.esta_sumergido
+            sumergido = isinstance(self, Submarino) and self.esta_sumergido
 
-            c = Celda(x, y, (tipo_barco, i, self.horizontal), True,
-                      False, self.hundido,
-                      sumergido=sumergido, tocada=tocada)
+            c = Celda(
+                x,
+                y,
+                (tipo_barco, i, self.horizontal),
+                True,
+                False,
+                self.hundido,
+                sumergido=sumergido,
+                tocada=tocada,
+            )
             result[(x, y)] = c
             if self.horizontal:
                 x = x + 1
@@ -646,7 +670,7 @@ class Barco(models.Model):
         """
         if len(self.puntos_tocados) > 0:
             raise BarcoTocado()
-        if type(self) == Submarino:
+        if isinstance(self, Submarino):
             if self.esta_sumergido:
                 raise SubmarinoSinMovimiento
         if self.horizontal:
@@ -670,9 +694,9 @@ class Barco(models.Model):
         movimiento largo.
         """
         if self.tablero.lleva_4_turnos_sin_escudo():
-            if type(self) in [Fragata, Patrulla]:
+            if isinstance(self, (Fragata, Patrulla)):
                 return True
-            elif type(self) == Submarino:
+            elif isinstance(self, Submarino):
                 return not self.esta_sumergido
         return False
 
@@ -681,7 +705,7 @@ class Barco(models.Model):
         Metodo para sobreescribir, hace que todos los barcos que no son
         submarinos den una excepcion al intentar sumergirse.
         """
-        if type(self) != Submarino:
+        if not isinstance(self, Submarino):
             raise BarcoNoSumergible()
 
 
@@ -689,11 +713,13 @@ class Acorazado(Barco):
     """
     Modelo que hereda de Barco, para representar al Acorazado.
     """
+
     ronda_ultimo_ataque_potente = models.IntegerField(
-        default=-3)  # para que pueda al principio
+        default=-3
+    )  # para que pueda al principio
 
     def __init__(self, *args, **kwargs):
-        super(Acorazado, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_ACORAZADO
 
     def lleva_2_turnos_sin_potente(self):
@@ -713,8 +739,9 @@ class Patrulla(Barco):
     """
     Modelo que hereda de Barco, para representar a la Patrulla.
     """
+
     def __init__(self, *args, **kwargs):
-        super(Patrulla, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_PATRULLA
 
     def __str__(self):
@@ -725,8 +752,9 @@ class Portaaviones(Barco):
     """
     Modelo que hereda de Barco, para representar al Portaaviones.
     """
+
     def __init__(self, *args, **kwargs):
-        super(Portaaviones, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_PORTAAVIONES
 
     def __str__(self):
@@ -737,11 +765,12 @@ class Submarino(Barco):
     """
     Modelo que hereda de Barco, para representar al Submarino.
     """
+
     esta_sumergido = models.BooleanField(default=False)
     veces_sumergimiento = models.PositiveIntegerField(default=0)
 
     def __init__(self, *args, **kwargs):
-        super(Submarino, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_SUBMARINO
 
     def tocar(self, posicion):
@@ -750,7 +779,7 @@ class Submarino(Barco):
         """
         assert self.estoy_en(posicion)
         if not self.esta_sumergido:
-            super(Submarino, self).tocar(posicion)
+            super().tocar(posicion)
 
     def sumergimiento(self):
         """
@@ -781,8 +810,9 @@ class Fragata(Barco):
     """
     Modelo que hereda de Barco, para representar a la Fragata.
     """
+
     def __init__(self, *args, **kwargs):
-        super(Fragata, self).__init__(*args, **kwargs)
+        super().__init__(*args, **kwargs)
         self.cant_celdas = CELDAS_FRAGATA
 
     def __str__(self):
@@ -795,9 +825,13 @@ class TableroVisible(models.Model):
     atacado de un enemigo. Guarda los ataques anteriores y las zonas visibles
     para el atacante.
     """
+
     jugador_atacante = models.ForeignKey(
-        Jugador, related_name='tableros_visibles', on_delete=models.CASCADE)
-    tablero_atacado = models.ForeignKey(Tablero, related_name='visibles', on_delete=models.CASCADE)
+        Jugador, related_name="tableros_visibles", on_delete=models.CASCADE
+    )
+    tablero_atacado = models.ForeignKey(
+        Tablero, related_name="visibles", on_delete=models.CASCADE
+    )
     puntos_atacados = fields.ListField(blank=True, null=True)
     tiros_agua = fields.ListField(blank=True, null=True)
     tiros_escudo = fields.ListField(blank=True, null=True)
@@ -887,15 +921,15 @@ class TableroVisible(models.Model):
             raise AtaqueFueraDelTablero()
         enemigo = self.tablero_atacado.jugador
         if self.jugador_atacante.radar.filter(contra=enemigo).count() < 2:
-            self.jugador_atacante.radar.create(
-                contra=self.tablero_atacado.jugador)
+            self.jugador_atacante.radar.create(contra=self.tablero_atacado.jugador)
             self.hay_radar = True
             self.posicion_radar = posicion
             turnos_totales = self.jugador_atacante.partida.cant_turnos_totales
             self.turno_del_radar = turnos_totales
         else:
             raise RadarUsado2VecesContra(
-                self.jugador_atacante, self.tablero_atacado.jugador)
+                self.jugador_atacante, self.tablero_atacado.jugador
+            )
 
     @property
     def celdas(self):
@@ -905,7 +939,7 @@ class TableroVisible(models.Model):
         """
         result = {}
         celdas_totales = self.tablero_atacado.celdas
-        for (x, y) in celdas_totales.keys():
+        for x, y in celdas_totales.keys():
             if (x, y) in self.puntos_atacados or celdas_totales[(x, y)].tocada:
                 result[(x, y)] = celdas_totales[(x, y)]
                 result[(x, y)].hay_escudo = False
@@ -920,12 +954,13 @@ class TableroVisible(models.Model):
 
         turnos_totales = self.jugador_atacante.partida.cant_turnos_totales
         if self.hay_radar and self.turno_del_radar == turnos_totales:
-            celdas_espiadas = self.tablero_atacado.ataque_radar(
-                self.posicion_radar)
-            for (x, y) in celdas_espiadas.keys():
+            celdas_espiadas = self.tablero_atacado.ataque_radar(self.posicion_radar)
+            for x, y in celdas_espiadas.keys():
                 result[(x, y)] = celdas_espiadas[(x, y)]
         return result
 
     def __str__(self):
-        return "Tablero de %s, segun %s" % (
-            self.tablero_atacado.jugador, self.jugador_atacante)
+        return (
+            f"Tablero de {self.tablero_atacado.jugador}, "
+            f"segun {self.jugador_atacante}"
+        )

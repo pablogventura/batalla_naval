@@ -5,3 +5,7 @@ __pycache__/
 batalla_naval.db
 .env
 *.log
+htmlcov/
+.coverage
+.mypy_cache/
+.ruff_cache/
